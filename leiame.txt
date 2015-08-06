@@ -1,0 +1,40 @@
+/*
+ * @author Howard Roatti
+ * @date 07/2015
+ * @contact howardcruzroatti@gmail.com
+ */
+
+﻿I - Inicio
+
+Os arquivos de entrada dos vetores podem ser de dois tipos:
+1 - Matrix Market: um tipo de matriz esparsa, mais informações em http://math.nist.gov/MatrixMarket/
+2 - Denso: onde cada linha é um documento e cada valor separado por espaço (ou tab) é um atributo.
+           Particularidade do arquivo: assim como o mtx, é preciso que na primeira linha tenha a 
+                                       seguinte informação separado por espaço(ou  tab): númeroLinhas númeroAtributos umNúmeroQualquer
+
+Para utilizar as ponderações que se baseam nas categorias dos documentos, é necessário que coloque como arquivo de entrada uma lista
+com as categorias. Uma por linha. Deve-se ter a mesma quantidade de categorias que documentos.
+
+II - Lista de Comandos
+-p : Utilize este parâmetro para selecionar o fator de ponderacao que sera utilizado.
+Os fatores disponiveis sao: icf (p/ Inverse Class Frequency), idf (p/ Inverse Document
+Frequency), rfxidf (p/ RFxIDF), quiquad (p/ QuiQuadrado), rf (p/ Relevance Frequency) e
+icfbased (P/ ICF-Based). Ex.: -p icf (seleciona o Inverse Class Frequency)
+
+-v : Utilize esse parâmetro para passar como entrada um arquivo com a matriz densa.
+Ex.: -v ./dataSets/mc1.vet
+
+-m : Utilize esse parâmetro para passar como entrada um arquivo com a matrix market.
+
+-c : Utilize esse parâmetro para passar como entrada um arquivo com a lista de categorias.
+Ex.: -c ./dataSets/mc1.class
+
+-n : Utilize este comando para normalizar a frequencia das palavras. As opcoes
+disponiveis sao: tf (p/ frequencia nao normalizada) e log (p/ normalizar com o log).
+Ex.: -n log (seleciona a normalizacao pelo log) 
+
+III - Exemplo de uso
+./ponderacoes -p quiquad -v ./dataSets/mc1.vet -c ./dataSets/mc1.class
+
+IV - Saída
+A saída será um arquivo com a matriz densa com o nome matrix.[idf|icf|rf|icfbased|rfxidf|quiquad]

@@ -29,12 +29,20 @@ Ex.: -v ./dataSets/mc1.vet
 -c : Utilize esse parâmetro para passar como entrada um arquivo com a lista de categorias.
 Ex.: -c ./dataSets/mc1.class
 
--n : Utilize este comando para normalizar a frequencia das palavras. As opcoes
+-n : Utilize este parâmetro para normalizar a frequencia das palavras. As opcoes
 disponiveis sao: tf (p/ frequencia nao normalizada) e log (p/ normalizar com o log).
 Ex.: -n log (seleciona a normalizacao pelo log) 
 
+-r : Utilize este parâmetro para reduzir a dimensionalidade da base. As opcoes
+disponiveis sao: docs (para remover os atributos que nao aparecem em uma quantidade minima de documentos) e
+quiquad (para remover atributos que possuem quiquadrado menor que um valor informado em -a ou se -a for informado
+como 0 sera utilizado a media como limite superior)
+Ex.: -r quiquad
+
+-a : Utilize este parâmetro para informar o limite utilizado para o valor escolhido no parametro -r.
+
 III - Exemplo de uso
-./ponderacoes -p quiquad -v ./dataSets/mc1.vet -c ./dataSets/mc1.class
+./ponderacoes -p quiquad -v ./dataSets/mc1.vet -c ./dataSets/mc1.class -n log
 
 IV - Saída
 A saída será um arquivo com a matriz densa com o nome matrix.[idf|icf|rf|icfbased|rfxidf|quiquad]

@@ -71,7 +71,7 @@ void reductionPerDocs(long l, long c, long minTermsDocs){
 void reductionPerQuiquad(long l, long c, float minValue){
 	int C = labelsAccountability.size();
 	map<long, float > QUIQUAD;
-	float soma = 0, media;
+	float soma = 0, media, tamClass;
 
 	for(int j = 0; j < c; j++){
 		long a = 0, b = 0, v_c = 0, d = 0, category = 0;
@@ -97,27 +97,29 @@ void reductionPerQuiquad(long l, long c, float minValue){
 
 			}
 
+			tamClass = classes[labelsIt_b->first].size();
+
 			long divisor = (a+v_c)*(b+d)*(a+b)*(v_c+d);
 			if(divisor != 0){
-				if((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor) > QUIQUAD[j]){
-					QUIQUAD[j] = (float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor);
-				}
+//				if((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor) > QUIQUAD[j]){
+					QUIQUAD[j] += (1/tamClass) * ((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor));
+//				}
 			}else{
-				QUIQUAD[j] = 1;
+				QUIQUAD[j] += 0;
 			}
-
-			soma += QUIQUAD[j];
 
 			//		printf("%d - %.6g\t%d\t%d\t%d\t%d\t%d\n", category, QUIQUAD(j, category), a, b, v_c, d, divisor);
 			//		category++;
 
 		}
 
+			soma += QUIQUAD[j];
+
 	}
 
 	media = soma/c;
 	printf("Media do Quiquadrado calculada para redução de dimensionalidade: %.2g\n", media);
-	printf("Media do Quiquadrado enviada para redução de dimensionalidade: %.2g\n", media);
+	printf("Media do Quiquadrado enviada para redução de dimensionalidade: %.2g\n", minValue);
 
 	if(minValue != 0){
 		media = minValue;

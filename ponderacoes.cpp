@@ -26,7 +26,7 @@ float limite;
 
 int main(int argc, char* argv[]) {
 
-	while ((c = getopt(argc, argv, "p:v:m:c:n:")) != -1) {
+	while ((c = getopt(argc, argv, "p:v:m:c:n:r:a:")) != -1) {
 		switch (c) {
 		case 'p' :
 			opc = ENUM(optarg);
@@ -63,16 +63,16 @@ int main(int argc, char* argv[]) {
 		case 'c' :
 			lClasses = optarg;
 
-			if(opc > 1){//Se precisa das classes para calcular
+//			if(opc > 1){//Se precisa das classes para calcular
 				arqClasses = fopen(lClasses, "r");
 
 				if(arqClasses == NULL){
 					printf("Erro ao tentar abrir o arquivo %s\n", lClasses);
 					fclose(arqClasses);
 					exit(3);
-				};
+				}
 
-			}
+//			}
 
 			printf("Classes: %s\n", lClasses);
 			break;

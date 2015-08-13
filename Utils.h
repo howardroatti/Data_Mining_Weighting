@@ -97,7 +97,7 @@ void reductionPerQuiquad(long l, long c, float minValue){
 
 			}
 
-			tamClass = classes[labelsIt_b->first].size();
+			tamClass = classes[labelsIt_a->first].size();
 
 			long divisor = (a+v_c)*(b+d)*(a+b)*(v_c+d);
 			if(divisor != 0){

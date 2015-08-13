@@ -66,6 +66,8 @@ void weightsICF(long l, long c, long norm){
 						TFxICF = TF * ICF[j];//TFxIDF
 					}
 
+				    freqFile << TFxICF << "\t";
+
 				}
 			}else{//Base Normal
 
@@ -88,9 +90,10 @@ void weightsICF(long l, long c, long norm){
 					TFxICF = TF * ICF[j];//TFxIDF
 				}
 
+			    freqFile << TFxICF << "\t";
+
 			}
 
-			freqFile << TFxICF << "\t";
 		}
 		freqFile << endl;
 	}

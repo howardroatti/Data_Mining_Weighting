@@ -37,7 +37,6 @@ void weightsIDF(long l, long c, long norm){
 	}
 
 	/*Calcula o TFxIDF e armazena em arquivo*/
-	ofstream freqFile("./matrix.idf");
 	for(int i = 0; i < l; i++){
 		for(int j = 0; j < c; j++){
 			if(colRemove.size() > 0){//Base Reduzida
@@ -53,17 +52,14 @@ void weightsIDF(long l, long c, long norm){
 						}
 
 						if((TF * IDF[j]) == 0){
-							TFxIDF = TF * IDF[j];//TFxIDF
+							dataSetOut[i][j] = TF * IDF[j];//TFxIDF
 						}else{
-							TFxIDF = TF * IDF[j] / sqrt(divisor);//TFxIDF
+							dataSetOut[i][j] = TF * IDF[j] / sqrt(divisor);//TFxIDF
 						}
 
 					}else{
-						TFxIDF = TF * IDF[j];//TFxIDF
+						dataSetOut[i][j] = TF * IDF[j];//TFxIDF
 					}
-
-					freqFile << TFxIDF << "\t";
-
 				}
 			}else{//Base Normal
 
@@ -77,24 +73,17 @@ void weightsIDF(long l, long c, long norm){
 					}
 
 					if((TF * IDF[j]) == 0){
-						TFxIDF = TF * IDF[j];//TFxIDF
+						dataSetOut[i][j] = TF * IDF[j];//TFxIDF
 					}else{
-						TFxIDF = TF * IDF[j] / sqrt(divisor);//TFxIDF
+						dataSetOut[i][j] = TF * IDF[j] / sqrt(divisor);//TFxIDF
 					}
 
 				}else{
-					TFxIDF = TF * IDF[j];//TFxIDF
+					dataSetOut[i][j] = TF * IDF[j];//TFxIDF
 				}
-
-				freqFile << TFxIDF << "\t";
-
 			}
-
 		}
-		freqFile << endl;
 	}
-	freqFile.close();
-
 }
 
 #endif /* IDF_H_ */

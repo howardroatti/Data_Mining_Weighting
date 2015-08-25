@@ -5,11 +5,11 @@
 
 void weightsICF(long l, long c, long norm){
 	map<long, float> ICF;
-	int C = labelsAccountability.size();
+	int C = labelsAccountability.size(), i, j;
 	float TFxICF, TF;
 
 	/*Calculando o ICF*/
-	for(int j = 0; j < c; j++){
+	for(j = 0; j < c; j++){
 		long c_i = 0;
 		if(colRemove.size() > 0){//Base Reduzida
 			if( find(colRemove.begin(), colRemove.end(), j) == colRemove.end() ){
@@ -41,9 +41,9 @@ void weightsICF(long l, long c, long norm){
 
 	}
 
-	ofstream freqFile("./matrix.icf");
-	for(int i = 0; i < l; i++){
-		for(int j = 0; j < c; j++){
+	for(i = 0; i < l; i++){
+
+		for(j = 0; j < c; j++){
 			if(colRemove.size() > 0){//Base Reduzida
 				if( find(colRemove.begin(), colRemove.end(), j) == colRemove.end() ){
 
@@ -57,16 +57,14 @@ void weightsICF(long l, long c, long norm){
 						}
 
 						if((TF * ICF[j]) == 0){
-							TFxICF = TF * ICF[j];//TFxIDF
+							dataSetOut[i][j] = TF * ICF[j];//TFxIDF
 						}else{
-							TFxICF = TF * ICF[j] / sqrt(divisor);//TFxIDF
+							dataSetOut[i][j] = TF * ICF[j] / sqrt(divisor);//TFxIDF
 						}
 
 					}else{
-						TFxICF = TF * ICF[j];//TFxIDF
+						dataSetOut[i][j] = TF * ICF[j];//TFxIDF
 					}
-
-				    freqFile << TFxICF << "\t";
 
 				}
 			}else{//Base Normal
@@ -81,23 +79,17 @@ void weightsICF(long l, long c, long norm){
 					}
 
 					if((TF * ICF[j]) == 0){
-						TFxICF = TF * ICF[j];//TFxIDF
+						dataSetOut[i][j] = TF * ICF[j];//TFxIDF
 					}else{
-						TFxICF = TF * ICF[j] / sqrt(divisor);//TFxIDF
+						dataSetOut[i][j] = TF * ICF[j] / sqrt(divisor);//TFxIDF
 					}
 
 				}else{
-					TFxICF = TF * ICF[j];//TFxIDF
+					dataSetOut[i][j] = TF * ICF[j];//TFxIDF
 				}
-
-			    freqFile << TFxICF << "\t";
-
 			}
-
 		}
-		freqFile << endl;
 	}
-	freqFile.close();
 
 }
 

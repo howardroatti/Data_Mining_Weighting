@@ -18,17 +18,16 @@ using namespace std;
 #define CHUNKSIZE 1
 
 char lixo[MAX];
-char *mDensa, *mMarket, *lClasses, sLin[10], sCol[10], sEnt[10]; 
-int lin, col, ent, i, j;
+char *mDensa, *mMarket, *lClasses, sLin[10], sCol[10], sEnt[10], tmpLabel[20]; 
+int lin, col, ent, i, j, out;
+
 FILE *entrada, *arqClasses;
 
 map<long, map<long, float> >dataSet;
-
+map<long, map<long, float> >dataSetOut;
 std::vector< string > labels;
 map< string, long > labelsAccountability;
 map< string, std::vector<long> > classes;
-char tmpLabel[20];
-
 std::vector<long> colRemove;
 
 const char* vet[TAM] = {
@@ -75,7 +74,7 @@ void reductionPerQuiquad(long l, long c, float minValue){
 
 	for(int j = 0; j < c; j++){
 		long a = 0, b = 0, v_c = 0, d = 0, category = 0;
-		QUIQUAD[j] = -1;
+		QUIQUAD[j] = 0;
 		for(map< string, long >::iterator labelsIt_a = labelsAccountability.begin(); labelsIt_a != labelsAccountability.end(); ++labelsIt_a){
 			for(map< string, long >::iterator labelsIt_b = labelsAccountability.begin(); labelsIt_b != labelsAccountability.end(); ++labelsIt_b){
 
@@ -101,9 +100,9 @@ void reductionPerQuiquad(long l, long c, float minValue){
 
 			long divisor = (a+v_c)*(b+d)*(a+b)*(v_c+d);
 			if(divisor != 0){
-//				if((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor) > QUIQUAD[j]){
-					QUIQUAD[j] += (1/tamClass) * ((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor));
-//				}
+				//				if((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor) > QUIQUAD[j]){
+				QUIQUAD[j] += (1/tamClass) * ((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor));
+				//				}
 			}else{
 				QUIQUAD[j] += 0;
 			}
@@ -113,7 +112,7 @@ void reductionPerQuiquad(long l, long c, float minValue){
 
 		}
 
-			soma += QUIQUAD[j];
+		soma += QUIQUAD[j];
 
 	}
 
@@ -136,31 +135,143 @@ void reductionPerQuiquad(long l, long c, float minValue){
 void weightsTF(long l, long c){
 	ofstream freqFile("./matrix.tf");
 
-	if(colRemove.size() > 0){
+	if(colRemove.size() > 0){//Base Reduzida
 
-		for(int i = 0; i < l; i++){
-			for(int j = 0; j < c; j++){
-				if( find(colRemove.begin(), colRemove.end(), j) == colRemove.end() )
-					freqFile << dataSet[i][j] << "\t";
-			}
-			freqFile << endl;
+		if(out == 1){//Matrix Market
+			freqFile << "%%MatrixMarket matrix coordinate real general" << endl;
+			freqFile << l << " " << c << " " << (l * (c - colRemove.size())) << endl;
 		}
 
-		//	cout << "Quantidade de Termos: " << c << endl;
-		//	cout << "Quantidade de Termos Apos a Remocao: " << (c - colRemove.size()) << endl;
+		for(int i = 0; i < l; i++){
 
-	}else{
+			if(out == 2){//libSVM
+				freqFile << labels[i] << " ";
+			}
+
+			for(int j = 0; j < c; j++){
+				if( find(colRemove.begin(), colRemove.end(), j) == colRemove.end() ){
+
+					if(out == 0){//Densa
+						freqFile << dataSet[i][j] << " ";
+					}else if(out == 1 && dataSet[i][j] != 0){//Matrix Market
+						freqFile << (i+1) << " " << (j+1) << " " << dataSet[i][j] << endl;
+					}else if(out == 2 && dataSet[i][j] != 0){//libSVM
+						freqFile << j << ":" << dataSet[i][j] << " ";
+					}
+
+				}
+			}
+
+			if(out != 1){
+				freqFile << endl;
+			}
+		}
+
+		//		cout << "Quantidade de Termos: " << c << endl;
+		//		cout << "Quantidade de Termos Apos a Remocao: " << (c - colRemove.size()) << endl;
+
+	}else{//Base Normal
+
+		if(out == 1){//Matrix Market
+			freqFile << "%%MatrixMarket matrix coordinate real general" << endl;
+			freqFile << l << " " << c << (l * c) << endl;
+		}
 
 		for(int i = 0; i < l; i++){
-			for(int j = 0; j < c; j++){
-				freqFile << dataSet[i][j] << "\t";
+
+			if(out == 2){//libSVM
+				freqFile << labels[i] << " ";
 			}
-			freqFile << endl;
+
+			for(int j = 0; j < c; j++){
+
+				if(out == 0){//Densa
+					freqFile << dataSet[i][j] << " ";
+				}else if(out == 1 && dataSet[i][j] != 0){//Matrix Market
+					freqFile << (i+1) << " " << (j+1) << " " << dataSet[i][j] << endl;
+				}else if(out == 2 && dataSet[i][j] != 0){//libSVM
+					freqFile << j << ":" << dataSet[i][j] << " ";
+				}
+
+			}
+
+			if(out != 1){
+				freqFile << endl;
+			}
+
 		}
 
 	}
 
 	freqFile.close();
+}
+
+void outGenerate(long l, long c, int _opc){
+	char nameFile[80];
+	strcpy(nameFile, "./matrix_");
+
+	if(_opc == 1){
+		strcat(nameFile, "idf");
+	}else if(_opc == 2){
+		strcat(nameFile, "icf");
+	}else if(_opc == 3){
+		strcat(nameFile, "rf");
+	}else if(_opc == 4){
+		strcat(nameFile, "icfbased");
+	}else if(_opc == 5){
+		strcat(nameFile, "rfxidf");
+	}else if(_opc == 6){
+		strcat(nameFile, "quiquad");
+	}
+
+	if(out == 0){//Densa
+		strcat(nameFile, ".dns");
+		ofstream freqFile(nameFile);
+
+		for(int i = 0; i < l; i++){
+			for(int j = 0; j < c; j++){
+				freqFile << dataSetOut[i][j] << " ";
+			}
+			freqFile << endl;
+		}
+		freqFile.close();
+	}else if(out == 1){//mtx
+		strcat(nameFile, ".mtx");
+		ofstream freqFile(nameFile);
+
+		long nonZeroes = 0;
+		for(int i = 0; i < l; i++){
+			for(int j = 0; j < c; j++){
+				if(dataSetOut[i][j] != 0)
+					nonZeroes++;
+			}
+		}
+
+		freqFile << "%%MatrixMarket matrix coordinate real general" << endl;
+		freqFile << l << " " << c << " " << nonZeroes << endl;
+
+		for(int i = 0; i < l; i++){
+			for(int j = 0; j < c; j++){
+				if(dataSetOut[i][j] != 0)
+					freqFile << (i+1) << " " << (j+1) << " " << dataSetOut[i][j] << endl;
+			}
+		}
+		freqFile.close();
+	}else if(out == 2){//libSVM
+		strcat(nameFile, ".libsvm");
+		ofstream freqFile(nameFile);
+
+		for(int i = 0; i < l; i++){
+			freqFile << labels[i] << " ";
+			for(int j = 0; j < c; j++){
+				if(dataSetOut[i][j] != 0)
+					freqFile << j << ":" << dataSetOut[i][j] << " ";
+			}
+			freqFile << endl;
+		}
+		freqFile.close();
+	}
+
 }
 
 #endif /* UTILS_H_ */

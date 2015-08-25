@@ -25,8 +25,9 @@ long norm = 0, reducto = 0;
 float limite;
 
 int main(int argc, char* argv[]) {
+	out = 0;//Densa
 
-	while ((c = getopt(argc, argv, "p:v:m:c:n:r:a:")) != -1) {
+	while ((c = getopt(argc, argv, "p:v:m:c:n:r:a:o:")) != -1) {
 		switch (c) {
 		case 'p' :
 			opc = ENUM(optarg);
@@ -95,6 +96,14 @@ int main(int argc, char* argv[]) {
 		case 'a':
 			limite = atof(optarg);
 			break;
+		case 'o':
+			if(strcmp(optarg, "mtx") == 0 ){
+				out = 1;
+			}else if(strcmp(optarg, "libSVM") == 0 ){
+				out = 2;
+			}
+			printf("Tipo de Saída: %s\n", optarg);
+			break;
 		default:
 			printf("Parâmetro não existe.\n -p -> Tipo de Ponderacao\n -v -> Matriz Densa\n -m -> Matrix Market\n -c -> Lista de Classes\n -v (tf|log)\n");
 			return 0;
@@ -109,7 +118,9 @@ int main(int argc, char* argv[]) {
 	col = atoi(sCol);
 	ent = atoi(sEnt);
 	int linha = lin, coluna = col;
-	printf("Termos(%d):Documentos(%d)\n", coluna, linha);//Para fins de ilustração, imprime as dimensões da matriz 
+	printf("Termos(%d):Documentos(%d)\n\n", coluna, linha);//Para fins de ilustração, imprime as dimensões da matriz
+
+	printf("Lendo o dataSet\n");
 
 	//Ler o arquivo de vetores
 	if(tipo ==  1){//mtx
@@ -139,6 +150,7 @@ int main(int argc, char* argv[]) {
 
 	//Ler o arquivo de classes
 	if(opc > 1 || reducto == 1){
+		printf("Lendo o arquivo de classes\n");
 		for(i = 0; i < linha; i++){
 			fscanf(arqClasses, "%s", tmpLabel);
 
@@ -151,10 +163,14 @@ int main(int argc, char* argv[]) {
 
 	/*Reducao de dimensionalidade*/
 	if(reducto == 1){
+		printf("Reduzindo\n");
 		reductionPerQuiquad(linha, coluna, limite);
 	}else if(reducto == 2){
+		printf("Reduzindo\n");
 		reductionPerDocs(linha, coluna, limite);
 	}
+
+	printf("Ponderando\n");
 
 	/*Ponderador*/
 	if(opc == 1){
@@ -174,6 +190,9 @@ int main(int argc, char* argv[]) {
 	}else{
 		printf("Em desenvolvimento\n");
 	}
+
+	printf("Salvando\n");
+	outGenerate(linha, coluna, opc);
 
 	printf("Concluido!\n");
 

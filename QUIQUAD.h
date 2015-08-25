@@ -92,8 +92,6 @@ void weightsQUIQUAD(long l, long c, long norm){//Quiquadado
 	}
 
 	//printf("Vai gravar!\n");
-
-	ofstream freqFile("./matrix.quiquad");
 	for(int i = 0; i < l; i++){
 		for(int j = 0; j < c; j++){
 			if(colRemove.size() > 0){//Base Reduzida
@@ -109,17 +107,14 @@ void weightsQUIQUAD(long l, long c, long norm){//Quiquadado
 						}
 
 						if((TF * QUIQUAD[j]) == 0){
-							TFxQUIQUAD = TF * QUIQUAD[j];//TFxIDF
+							dataSetOut[i][j] = TF * QUIQUAD[j];//TFxIDF
 						}else{
-							TFxQUIQUAD = TF * QUIQUAD[j] / sqrt(divisor);//TFxIDF
+							dataSetOut[i][j] = TF * QUIQUAD[j] / sqrt(divisor);//TFxIDF
 						}
 
 					}else{
-						TFxQUIQUAD = TF * QUIQUAD[j];//TFxRF
+						dataSetOut[i][j] = TF * QUIQUAD[j];//TFxRF
 					}
-
-					freqFile << TFxQUIQUAD << "\t";
-
 				}
 			}else{
 
@@ -133,23 +128,17 @@ void weightsQUIQUAD(long l, long c, long norm){//Quiquadado
 					}
 
 					if((TF * QUIQUAD[j]) == 0){
-						TFxQUIQUAD = TF * QUIQUAD[j];//TFxIDF
+						dataSetOut[i][j] = TF * QUIQUAD[j];//TFxIDF
 					}else{
-						TFxQUIQUAD = TF * QUIQUAD[j] / sqrt(divisor);//TFxIDF
+						dataSetOut[i][j] = TF * QUIQUAD[j] / sqrt(divisor);//TFxIDF
 					}
 
 				}else{
-					TFxQUIQUAD = TF * QUIQUAD[j];//TFxRF
+					dataSetOut[i][j] = TF * QUIQUAD[j];//TFxRF
 				}
-
-				freqFile << TFxQUIQUAD << "\t";
-
 			}
 		}
-		freqFile << endl;
 	}
-	freqFile.close();
-
 }
 
 #endif /* QUIQUAD_H_ */

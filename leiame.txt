@@ -41,8 +41,11 @@ Ex.: -r quiquad
 
 -a : Utilize este parâmetro para informar o limite utilizado para o valor escolhido no parametro -r.
 
+-o: Utilize este parâmetro caso queira mudar a saída. As opcoes disponiveis sao: mtx (para matrix market) e
+libSVM (para o formato da libSVM). Nao sendo informado a saida sera densa.
+
 III - Exemplo de uso
 ./ponderacoes -p quiquad -v ./dataSets/mc1.vet -c ./dataSets/mc1.class -n log
 
 IV - Saída
-A saída será um arquivo com a matriz densa com o nome matrix.[idf|icf|rf|icfbased|rfxidf|quiquad]
+A saída será um arquivo com a matriz densa com o nome matrix_[idf|icf|rf|icfbased|rfxidf|quiquad].[dns|mtx|libSVM]

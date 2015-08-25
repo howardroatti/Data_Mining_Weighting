@@ -100,7 +100,6 @@ void weightsICFBASED(long l, long c, long norm){//ICFBASED
 		}
 	}
 
-	ofstream freqFile("./matrix.icfbased");
 	for(int i = 0; i < l; i++){
 		for(int j = 0; j < c; j++){
 			if(colRemove.size() > 0){//Base Reduzida
@@ -116,16 +115,14 @@ void weightsICFBASED(long l, long c, long norm){//ICFBASED
 						}
 
 						if((TF * ICFBASED[j]) == 0){
-							TFxICFBASED = TF * ICFBASED[j];//TFxIDF
+							dataSetOut[i][j] = TF * ICFBASED[j];//TFxIDF
 						}else{
-							TFxICFBASED = TF * ICFBASED[j] / sqrt(divisor);//TFxIDF
+							dataSetOut[i][j] = TF * ICFBASED[j] / sqrt(divisor);//TFxIDF
 						}
 
 					}else{
-						TFxICFBASED = TF * ICFBASED[j];//TFxRF
+						dataSetOut[i][j] = TF * ICFBASED[j];//TFxRF
 					}
-
-					freqFile << TFxICFBASED << "\t";
 
 				}
 			}else{//Base Normal
@@ -140,22 +137,19 @@ void weightsICFBASED(long l, long c, long norm){//ICFBASED
 					}
 
 					if((TF * ICFBASED[j]) == 0){
-						TFxICFBASED = TF * ICFBASED[j];//TFxIDF
+						dataSetOut[i][j] = TF * ICFBASED[j];//TFxIDF
 					}else{
-						TFxICFBASED = TF * ICFBASED[j] / sqrt(divisor);//TFxIDF
+						dataSetOut[i][j] = TF * ICFBASED[j] / sqrt(divisor);//TFxIDF
 					}
 
 				}else{
-					TFxICFBASED = TF * ICFBASED[j];//TFxRF
+					dataSetOut[i][j] = TF * ICFBASED[j];//TFxRF
 				}
 
-				freqFile << TFxICFBASED << "\t";
 
 			}
 		}
-		freqFile << endl;
 	}
-	freqFile.close();
 
 }
 

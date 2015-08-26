@@ -225,9 +225,23 @@ void outGenerate(long l, long c, int _opc){
 		strcat(nameFile, "quiquad");
 	}
 
+	long nonZeroes = 0;
+	for(int i = 0; i < l; i++){
+		for(int j = 0; j < c; j++){
+			if(dataSetOut[i][j] != 0)
+				nonZeroes++;
+		}
+	}
+
 	if(out == 0){//Densa
 		strcat(nameFile, ".dns");
 		ofstream freqFile(nameFile);
+
+		if(colRemove.size() > 0){
+			freqFile << l << " " << (c-colRemove.size()) << " " << nonZeroes << endl;
+		}else{
+			freqFile << l << " " << c << " " << nonZeroes << endl;
+		}
 
 		for(int i = 0; i < l; i++){
 			for(int j = 0; j < c; j++){
@@ -240,16 +254,12 @@ void outGenerate(long l, long c, int _opc){
 		strcat(nameFile, ".mtx");
 		ofstream freqFile(nameFile);
 
-		long nonZeroes = 0;
-		for(int i = 0; i < l; i++){
-			for(int j = 0; j < c; j++){
-				if(dataSetOut[i][j] != 0)
-					nonZeroes++;
-			}
-		}
-
 		freqFile << "%%MatrixMarket matrix coordinate real general" << endl;
-		freqFile << l << " " << c << " " << nonZeroes << endl;
+		if(colRemove.size() > 0){
+			freqFile << l << " " << (c-colRemove.size()) << " " << nonZeroes << endl;
+		}else{
+			freqFile << l << " " << c << " " << nonZeroes << endl;
+		}
 
 		for(int i = 0; i < l; i++){
 			for(int j = 0; j < c; j++){

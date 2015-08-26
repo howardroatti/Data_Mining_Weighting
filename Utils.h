@@ -132,7 +132,7 @@ void reductionPerQuiquad(long l, long c, float minValue){
 	}
 
 	if(colRemove.size() > 0){
-		printf("Original(%d)->Reduzido para(%d)", c, (c-colRemove.size()));
+		printf("Original(%ld)->Reduzido para(%ld)", c, (c-colRemove.size()));
 	}
 
 }

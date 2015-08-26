@@ -68,58 +68,43 @@ void reductionPerDocs(long l, long c, long minTermsDocs){
 }
 
 void reductionPerQuiquad(long l, long c, float minValue){
-	int C = labelsAccountability.size();
 	map<long, float > QUIQUAD;
-	float soma = 0, media, tamClass;
+	float soma = 0, media, tamClass, A, B, C, D, probabilidade_doc_in_classe, divisor, totalOcorrencias;
+
+	printf("Media do Quiquadrado enviada para redução de dimensionalidade: %.6g\n", minValue);
 
 	for(int j = 0; j < c; j++){
-		long a = 0, b = 0, v_c = 0, d = 0, category = 0;
+		totalOcorrencias = 0;
+		for(int i = 0; i < c; i++){//Contabiliza as ocorrencias do termo na base
+			if( dataSet[i][j] > 0 ){
+				totalOcorrencias++;
+			}
+		}
 		QUIQUAD[j] = 0;
 		for(map< string, long >::iterator labelsIt_a = labelsAccountability.begin(); labelsIt_a != labelsAccountability.end(); ++labelsIt_a){
-			for(map< string, long >::iterator labelsIt_b = labelsAccountability.begin(); labelsIt_b != labelsAccountability.end(); ++labelsIt_b){
-
-				for(std::vector<long>::iterator it = classes[labelsIt_b->first].begin(); it != classes[labelsIt_b->first].end(); ++it){
-					if( dataSet[(*it)][j] > 0 ){
-						if(strcmp(labelsIt_a->first.c_str(), labelsIt_b->first.c_str()) == 0){
-							a++;
-						}else{
-							b++;
-						}
-					}else{
-						if(strcmp(labelsIt_a->first.c_str(), labelsIt_b->first.c_str()) == 0){
-							v_c++;
-						}else{
-							d++;
-						}
-					}
+			for(std::vector<long>::iterator it = classes[labelsIt_a->first].begin(); it != classes[labelsIt_a->first].end(); ++it){
+				if( dataSet[(*it)][j] > 0 ){//Contabiliza as ocorrencias do termo na classe
+					A++;
 				}
-
 			}
 
 			tamClass = classes[labelsIt_a->first].size();
-			float probabilidade_doc_in_classe = tamClass/l;
-
-			long divisor = (a+v_c)*(b+d)*(a+b)*(v_c+d);
+			probabilidade_doc_in_classe = tamClass/l;
+			B = totalOcorrencias - A;//Contabiliza os documentos que possuem o termo e nao sao da classe
+			C = tamClass - A;//Contabiliza os documentos da classe que nao possuem o termo
+			D = l - A - B - C;//Contabiliza os documentos que nao possuem o termo e nao pertencem a classe
+			divisor = (A+C)*(B+D)*(A+B)*(C+D);
 			if(divisor != 0){
-				//				if((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor) > QUIQUAD[j]){
-				QUIQUAD[j] += (probabilidade_doc_in_classe) * ((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor));
-				//				}
+				QUIQUAD[j] += (probabilidade_doc_in_classe) * ((float)(l*pow((A*D)-(C*B),2)) / (float)(divisor));
 			}else{
 				QUIQUAD[j] += 0;
 			}
-
-			//		printf("%d - %.6g\t%d\t%d\t%d\t%d\t%d\n", category, QUIQUAD(j, category), a, b, v_c, d, divisor);
-			//		category++;
-
 		}
-
 		soma += QUIQUAD[j];
-
 	}
 
 	media = soma/c;
-	printf("Media do Quiquadrado calculada para redução de dimensionalidade: %.2g\n", media);
-	printf("Media do Quiquadrado enviada para redução de dimensionalidade: %.2g\n", minValue);
+	printf("Media do Quiquadrado calculada para redução de dimensionalidade: %.6g\n", media);
 
 	if(minValue != 0){
 		media = minValue;
@@ -132,83 +117,13 @@ void reductionPerQuiquad(long l, long c, float minValue){
 	}
 
 	if(colRemove.size() > 0){
-		printf("Original(%ld)->Reduzido para(%ld)", c, (c-colRemove.size()));
+		printf("Original(%ld)->Reduzido para(%ld)\n", c, (c-colRemove.size()));
 	}
 
 }
 
 void weightsTF(long l, long c){
-	ofstream freqFile("./matrix.tf");
-
-	if(colRemove.size() > 0){//Base Reduzida
-
-		if(out == 1){//Matrix Market
-			freqFile << "%%MatrixMarket matrix coordinate real general" << endl;
-			freqFile << l << " " << c << " " << (l * (c - colRemove.size())) << endl;
-		}
-
-		for(int i = 0; i < l; i++){
-
-			if(out == 2){//libSVM
-				freqFile << labels[i] << " ";
-			}
-
-			for(int j = 0; j < c; j++){
-				if( find(colRemove.begin(), colRemove.end(), j) == colRemove.end() ){
-
-					if(out == 0){//Densa
-						freqFile << dataSet[i][j] << " ";
-					}else if(out == 1 && dataSet[i][j] != 0){//Matrix Market
-						freqFile << (i+1) << " " << (j+1) << " " << dataSet[i][j] << endl;
-					}else if(out == 2 && dataSet[i][j] != 0){//libSVM
-						freqFile << j << ":" << dataSet[i][j] << " ";
-					}
-
-				}
-			}
-
-			if(out != 1){
-				freqFile << endl;
-			}
-		}
-
-		//		cout << "Quantidade de Termos: " << c << endl;
-		//		cout << "Quantidade de Termos Apos a Remocao: " << (c - colRemove.size()) << endl;
-
-	}else{//Base Normal
-
-		if(out == 1){//Matrix Market
-			freqFile << "%%MatrixMarket matrix coordinate real general" << endl;
-			freqFile << l << " " << c << (l * c) << endl;
-		}
-
-		for(int i = 0; i < l; i++){
-
-			if(out == 2){//libSVM
-				freqFile << labels[i] << " ";
-			}
-
-			for(int j = 0; j < c; j++){
-
-				if(out == 0){//Densa
-					freqFile << dataSet[i][j] << " ";
-				}else if(out == 1 && dataSet[i][j] != 0){//Matrix Market
-					freqFile << (i+1) << " " << (j+1) << " " << dataSet[i][j] << endl;
-				}else if(out == 2 && dataSet[i][j] != 0){//libSVM
-					freqFile << j << ":" << dataSet[i][j] << " ";
-				}
-
-			}
-
-			if(out != 1){
-				freqFile << endl;
-			}
-
-		}
-
-	}
-
-	freqFile.close();
+	printf("Nada a ser feito.\n");
 }
 
 void outGenerate(long l, long c, int _opc){

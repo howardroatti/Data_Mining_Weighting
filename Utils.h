@@ -97,11 +97,12 @@ void reductionPerQuiquad(long l, long c, float minValue){
 			}
 
 			tamClass = classes[labelsIt_a->first].size();
+			float probabilidade_doc_in_classe = tamClass/l;
 
 			long divisor = (a+v_c)*(b+d)*(a+b)*(v_c+d);
 			if(divisor != 0){
 				//				if((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor) > QUIQUAD[j]){
-				QUIQUAD[j] += (1/tamClass) * ((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor));
+				QUIQUAD[j] += (probabilidade_doc_in_classe) * ((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor));
 				//				}
 			}else{
 				QUIQUAD[j] += 0;

@@ -64,7 +64,6 @@ void reductionPerDocs(long l, long c, long minTermsDocs){
 			colRemove.push_back(j);
 		}
 	}
-
 }
 
 void reductionPerQuiquad(long l, long c, float minValue){
@@ -76,14 +75,15 @@ void reductionPerQuiquad(long l, long c, float minValue){
 	for(int j = 0; j < c; j++){
 		totalOcorrencias = 0;
 		for(int i = 0; i < c; i++){//Contabiliza as ocorrencias do termo na base
-			if( dataSet[i][j] > 0 ){
+			if( dataSet[i][j] != 0 ){
 				totalOcorrencias++;
 			}
 		}
 		QUIQUAD[j] = 0;
 		for(map< string, long >::iterator labelsIt_a = labelsAccountability.begin(); labelsIt_a != labelsAccountability.end(); ++labelsIt_a){
+			A = 0;
 			for(std::vector<long>::iterator it = classes[labelsIt_a->first].begin(); it != classes[labelsIt_a->first].end(); ++it){
-				if( dataSet[(*it)][j] > 0 ){//Contabiliza as ocorrencias do termo na classe
+				if( dataSet[(*it)][j] != 0 ){//Contabiliza as ocorrencias do termo na classe
 					A++;
 				}
 			}
@@ -99,6 +99,7 @@ void reductionPerQuiquad(long l, long c, float minValue){
 			}else{
 				QUIQUAD[j] += 0;
 			}
+
 		}
 		soma += QUIQUAD[j];
 	}
@@ -144,6 +145,7 @@ void outGenerate(long l, long c, int _opc){
 		strcat(nameFile, "quiquad");
 	}
 
+	//Contabiliza os nao nulos para as saidas mtx e libSVM
 	long nonZeroes = 0;
 	for(int i = 0; i < l; i++){
 		for(int j = 0; j < c; j++){
@@ -152,7 +154,8 @@ void outGenerate(long l, long c, int _opc){
 		}
 	}
 
-	if(out == 0){//Densa
+	if(out == 0){
+//##########################Densa##########################################
 		strcat(nameFile, ".dns");
 		ofstream freqFile(nameFile);
 
@@ -169,36 +172,63 @@ void outGenerate(long l, long c, int _opc){
 			freqFile << endl;
 		}
 		freqFile.close();
-	}else if(out == 1){//mtx
+	}else if(out == 1){
+//##########################mtx##########################################
 		strcat(nameFile, ".mtx");
 		ofstream freqFile(nameFile);
 
 		freqFile << "%%MatrixMarket matrix coordinate real general" << endl;
 		if(colRemove.size() > 0){
 			freqFile << l << " " << (c-colRemove.size()) << " " << nonZeroes << endl;
+			for(int i = 0; i < l; i++){
+				int contador = 0;
+				for(int j = 0; j < c && contador < (c-colRemove.size()); j++, contador){
+					if(dataSetOut[i][j] != 0)
+						freqFile << (i+1) << " " << (contador+1) << " " << dataSetOut[i][j] << endl;
+				}
+			}
 		}else{
 			freqFile << l << " " << c << " " << nonZeroes << endl;
+
+			for(int i = 0; i < l; i++){
+				for(int j = 0; j < c; j++){
+					if(dataSetOut[i][j] != 0)
+						freqFile << (i+1) << " " << (j+1) << " " << dataSetOut[i][j] << endl;
+				}
+			}
+
 		}
 
-		for(int i = 0; i < l; i++){
-			for(int j = 0; j < c; j++){
-				if(dataSetOut[i][j] != 0)
-					freqFile << (i+1) << " " << (j+1) << " " << dataSetOut[i][j] << endl;
-			}
-		}
 		freqFile.close();
-	}else if(out == 2){//libSVM
+	}else if(out == 2){
+//##########################libSVM##########################################
 		strcat(nameFile, ".libsvm");
 		ofstream freqFile(nameFile);
 
-		for(int i = 0; i < l; i++){
-			freqFile << labels[i] << " ";
-			for(int j = 0; j < c; j++){
-				if(dataSetOut[i][j] != 0)
-					freqFile << j << ":" << dataSetOut[i][j] << " ";
+		if(colRemove.size() > 0){
+
+			for(int i = 0; i < l; i++){
+				freqFile << labels[i] << " ";
+				int contador = 0;
+				for(int j = 0; j < c && contador < (c-colRemove.size()); j++, contador){
+					if(dataSetOut[i][j] != 0)
+						freqFile << contador << ":" << dataSetOut[i][j] << " ";
+				}
+				freqFile << endl;
 			}
-			freqFile << endl;
+		}else{
+
+			for(int i = 0; i < l; i++){
+				freqFile << labels[i] << " ";
+				for(int j = 0; j < c; j++){
+					if(dataSetOut[i][j] != 0)
+						freqFile << j << ":" << dataSetOut[i][j] << " ";
+				}
+				freqFile << endl;
+			}
+
 		}
+
 		freqFile.close();
 	}
 

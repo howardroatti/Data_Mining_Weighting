@@ -20,11 +20,11 @@
 using namespace std;
 
 char *optarg;
-int c, opc = 1, tipo = 0;
+long c, opc = 1, tipo = 0;
 long norm = 0, reducto = 0;
 float limite;
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]){
 	out = 0;//Densa
 
 	while ((c = getopt(argc, argv, "p:v:m:c:n:r:a:o:")) != -1) {

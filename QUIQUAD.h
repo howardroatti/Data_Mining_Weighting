@@ -4,91 +4,68 @@
 #include "Utils.h"
 
 void weightsQUIQUAD(long l, long c, long norm){//Quiquadado
-	int C = labelsAccountability.size();
 	map<long, float > QUIQUAD;
-	float soma = 0, TFxQUIQUAD, TF;
+	float soma = 0, TF, tamClass, A, B, C, D, probabilidade_doc_in_classe, divisor, totalOcorrencias;
 
 	for(int j = 0; j < c; j++){
-		long a = 0, b = 0, v_c = 0, d = 0, category = 0;
-		QUIQUAD[j] = -1;
-		if(colRemove.size() > 0){//Base Reduzida
+		totalOcorrencias = 0;
+		for(int i = 0; i < c; i++){//Contabiliza as ocorrencias do termo na base
+			if( dataSet[i][j] != 0 ){
+				totalOcorrencias++;
+			}
+		}
+		QUIQUAD[j] = 0;
+
+		if(colRemove.size() > 0){
 			if( find(colRemove.begin(), colRemove.end(), j) == colRemove.end() ){
-
 				for(map< string, long >::iterator labelsIt_a = labelsAccountability.begin(); labelsIt_a != labelsAccountability.end(); ++labelsIt_a){
-					for(map< string, long >::iterator labelsIt_b = labelsAccountability.begin(); labelsIt_b != labelsAccountability.end(); ++labelsIt_b){
-
-						for(std::vector<long>::iterator it = classes[labelsIt_b->first].begin(); it != classes[labelsIt_b->first].end(); ++it){
-							if( dataSet[(*it)][j] > 0 ){
-								if(strcmp(labelsIt_a->first.c_str(), labelsIt_b->first.c_str()) == 0){
-									a++;
-								}else{
-									b++;
-								}
-							}else{
-								if(strcmp(labelsIt_a->first.c_str(), labelsIt_b->first.c_str()) == 0){
-									v_c++;
-								}else{
-									d++;
-								}
-							}
+					A = 0;
+					for(std::vector<long>::iterator it = classes[labelsIt_a->first].begin(); it != classes[labelsIt_a->first].end(); ++it){
+						if( dataSet[(*it)][j] != 0 ){//Contabiliza as ocorrencias do termo na classe
+							A++;
 						}
-
 					}
 
-					long divisor = (a+v_c)*(b+d)*(a+b)*(v_c+d);
+					tamClass = classes[labelsIt_a->first].size();
+					probabilidade_doc_in_classe = tamClass/l;
+					B = totalOcorrencias - A;//Contabiliza os documentos que possuem o termo e nao sao da classe
+					C = tamClass - A;//Contabiliza os documentos da classe que nao possuem o termo
+					D = l - A - B - C;//Contabiliza os documentos que nao possuem o termo e nao pertencem a classe
+					divisor = (A+C)*(B+D)*(A+B)*(C+D);
 					if(divisor != 0){
-						if((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor) > QUIQUAD[j]){
-							QUIQUAD[j] = (float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor);
-						}
+						if(((float)(l*pow((A*D)-(C*B),2)) / (float)(divisor)) > QUIQUAD[j])
+							QUIQUAD[j] = ((float)(l*pow((A*D)-(C*B),2)) / (float)(divisor));
 					}else{
 						QUIQUAD[j] = 1;
 					}
 
-					//		printf("%d - %.6g\t%d\t%d\t%d\t%d\t%d\n", category, QUIQUAD(j, category), a, b, v_c, d, divisor);
-					//		category++;
-
 				}
-
 			}
 		}else{
-
 			for(map< string, long >::iterator labelsIt_a = labelsAccountability.begin(); labelsIt_a != labelsAccountability.end(); ++labelsIt_a){
-				for(map< string, long >::iterator labelsIt_b = labelsAccountability.begin(); labelsIt_b != labelsAccountability.end(); ++labelsIt_b){
-
-					for(std::vector<long>::iterator it = classes[labelsIt_b->first].begin(); it != classes[labelsIt_b->first].end(); ++it){
-						if( dataSet[(*it)][j] > 0 ){
-							if(strcmp(labelsIt_a->first.c_str(), labelsIt_b->first.c_str()) == 0){
-								a++;
-							}else{
-								b++;
-							}
-						}else{
-							if(strcmp(labelsIt_a->first.c_str(), labelsIt_b->first.c_str()) == 0){
-								v_c++;
-							}else{
-								d++;
-							}
-						}
+				A = 0;
+				for(std::vector<long>::iterator it = classes[labelsIt_a->first].begin(); it != classes[labelsIt_a->first].end(); ++it){
+					if( dataSet[(*it)][j] != 0 ){//Contabiliza as ocorrencias do termo na classe
+						A++;
 					}
-
 				}
 
-				long divisor = (a+v_c)*(b+d)*(a+b)*(v_c+d);
+				tamClass = classes[labelsIt_a->first].size();
+				probabilidade_doc_in_classe = tamClass/l;
+				B = totalOcorrencias - A;//Contabiliza os documentos que possuem o termo e nao sao da classe
+				C = tamClass - A;//Contabiliza os documentos da classe que nao possuem o termo
+				D = l - A - B - C;//Contabiliza os documentos que nao possuem o termo e nao pertencem a classe
+				divisor = (A+C)*(B+D)*(A+B)*(C+D);
 				if(divisor != 0){
-					if((float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor) > QUIQUAD[j]){
-						QUIQUAD[j] = (float)(l*pow((a*d)-(v_c*b),2)) / (float)(divisor);
-					}
+					if(((float)(l*pow((A*D)-(C*B),2)) / (float)(divisor)) > QUIQUAD[j])
+						QUIQUAD[j] = ((float)(l*pow((A*D)-(C*B),2)) / (float)(divisor));
 				}else{
 					QUIQUAD[j] = 1;
 				}
 
-				//		printf("%d - %.6g\t%d\t%d\t%d\t%d\t%d\n", category, QUIQUAD(j, category), a, b, v_c, d, divisor);
-				//		category++;
-
 			}
-
 		}
-
+	
 	}
 
 	//printf("Vai gravar!\n");

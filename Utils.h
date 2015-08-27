@@ -182,7 +182,7 @@ void outGenerate(long l, long c, int _opc){
 			freqFile << l << " " << (c-colRemove.size()) << " " << nonZeroes << endl;
 			for(int i = 0; i < l; i++){
 				int contador = 0;
-				for(int j = 0; j < c && contador < (c-colRemove.size()); j++, contador){
+				for(int j = 0; j < c && contador < (c-colRemove.size()); j++, contador++){
 					if( find(colRemove.begin(), colRemove.end(), j) == colRemove.end() ){
 						if(dataSetOut[i][j] != 0)
 							freqFile << (i+1) << " " << (contador+1) << "\t" << dataSetOut[i][j] << endl;
@@ -212,7 +212,7 @@ void outGenerate(long l, long c, int _opc){
 			for(int i = 0; i < l; i++){
 				freqFile << labels[i] << " ";
 				int contador = 0;
-				for(int j = 0; j < c && contador < (c-colRemove.size()); j++, contador){
+				for(int j = 0; j < c && contador < (c-colRemove.size()); j++, contador++){
 					if( find(colRemove.begin(), colRemove.end(), j) == colRemove.end() ){
 						if(dataSetOut[i][j] != 0)
 							freqFile << contador << ":" << dataSetOut[i][j] << " ";

@@ -149,7 +149,7 @@ void outGenerate(long l, long c, int _opc){
 	long nonZeroes = 0;
 	for(int i = 0; i < l; i++){
 		for(int j = 0; j < c; j++){
-			if(dataSetOut[i][j] != 0)
+			if(dataSet[i][j] != 0)
 				nonZeroes++;
 		}
 	}
@@ -167,7 +167,7 @@ void outGenerate(long l, long c, int _opc){
 
 		for(int i = 0; i < l; i++){
 			for(int j = 0; j < c; j++){
-				freqFile << dataSetOut[i][j] << " ";
+				freqFile << dataSet[i][j] << " ";
 			}
 			freqFile << endl;
 		}
@@ -184,8 +184,8 @@ void outGenerate(long l, long c, int _opc){
 				int contador = 0;
 				for(int j = 0; j < c && contador < (c-colRemove.size()); j++, contador++){
 					if( find(colRemove.begin(), colRemove.end(), j) == colRemove.end() ){
-						if(dataSetOut[i][j] != 0)
-							freqFile << (i+1) << " " << (contador+1) << "\t" << dataSetOut[i][j] << endl;
+						if(dataSet[i][j] != 0)
+							freqFile << (i+1) << " " << (contador+1) << "\t" << dataSet[i][j] << endl;
 					}
 				}
 			}
@@ -194,8 +194,8 @@ void outGenerate(long l, long c, int _opc){
 
 			for(int i = 0; i < l; i++){
 				for(int j = 0; j < c; j++){
-					if(dataSetOut[i][j] != 0)
-						freqFile << (i+1) << " " << (j+1) << "\t" << dataSetOut[i][j] << endl;
+					if(dataSet[i][j] != 0)
+						freqFile << (i+1) << " " << (j+1) << "\t" << dataSet[i][j] << endl;
 				}
 			}
 
@@ -214,8 +214,8 @@ void outGenerate(long l, long c, int _opc){
 				int contador = 0;
 				for(int j = 0; j < c && contador < (c-colRemove.size()); j++, contador++){
 					if( find(colRemove.begin(), colRemove.end(), j) == colRemove.end() ){
-						if(dataSetOut[i][j] != 0)
-							freqFile << contador << ":" << dataSetOut[i][j] << " ";
+						if(dataSet[i][j] != 0)
+							freqFile << contador << ":" << dataSet[i][j] << " ";
 					}
 				}
 				freqFile << endl;
@@ -225,8 +225,8 @@ void outGenerate(long l, long c, int _opc){
 			for(int i = 0; i < l; i++){
 				freqFile << labels[i] << " ";
 				for(int j = 0; j < c; j++){
-					if(dataSetOut[i][j] != 0)
-						freqFile << j << ":" << dataSetOut[i][j] << " ";
+					if(dataSet[i][j] != 0)
+						freqFile << j << ":" << dataSet[i][j] << " ";
 				}
 				freqFile << endl;
 			}

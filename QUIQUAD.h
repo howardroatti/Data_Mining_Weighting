@@ -84,13 +84,13 @@ void weightsQUIQUAD(long l, long c, long norm){//Quiquadado
 						}
 
 						if((TF * QUIQUAD[j]) == 0){
-							dataSetOut[i][j] = TF * QUIQUAD[j];//TFxIDF
+							dataSet[i][j] = TF * QUIQUAD[j];//TFxIDF
 						}else{
-							dataSetOut[i][j] = TF * QUIQUAD[j] / sqrt(divisor);//TFxIDF
+							dataSet[i][j] = TF * QUIQUAD[j] / sqrt(divisor);//TFxIDF
 						}
 
 					}else{
-						dataSetOut[i][j] = TF * QUIQUAD[j];//TFxRF
+						dataSet[i][j] = TF * QUIQUAD[j];//TFxRF
 					}
 				}
 			}else{
@@ -105,13 +105,13 @@ void weightsQUIQUAD(long l, long c, long norm){//Quiquadado
 					}
 
 					if((TF * QUIQUAD[j]) == 0){
-						dataSetOut[i][j] = TF * QUIQUAD[j];//TFxIDF
+						dataSet[i][j] = TF * QUIQUAD[j];//TFxIDF
 					}else{
-						dataSetOut[i][j] = TF * QUIQUAD[j] / sqrt(divisor);//TFxIDF
+						dataSet[i][j] = TF * QUIQUAD[j] / sqrt(divisor);//TFxIDF
 					}
 
 				}else{
-					dataSetOut[i][j] = TF * QUIQUAD[j];//TFxRF
+					dataSet[i][j] = TF * QUIQUAD[j];//TFxRF
 				}
 			}
 		}

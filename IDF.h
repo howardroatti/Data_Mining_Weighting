@@ -52,13 +52,13 @@ void weightsIDF(long l, long c, long norm){
 						}
 
 						if((TF * IDF[j]) == 0){
-							dataSetOut[i][j] = TF * IDF[j];//TFxIDF
+							dataSet[i][j] = TF * IDF[j];//TFxIDF
 						}else{
-							dataSetOut[i][j] = TF * IDF[j] / sqrt(divisor);//TFxIDF
+							dataSet[i][j] = TF * IDF[j] / sqrt(divisor);//TFxIDF
 						}
 
 					}else{
-						dataSetOut[i][j] = TF * IDF[j];//TFxIDF
+						dataSet[i][j] = TF * IDF[j];//TFxIDF
 					}
 				}
 			}else{//Base Normal
@@ -73,13 +73,13 @@ void weightsIDF(long l, long c, long norm){
 					}
 
 					if((TF * IDF[j]) == 0){
-						dataSetOut[i][j] = TF * IDF[j];//TFxIDF
+						dataSet[i][j] = TF * IDF[j];//TFxIDF
 					}else{
-						dataSetOut[i][j] = TF * IDF[j] / sqrt(divisor);//TFxIDF
+						dataSet[i][j] = TF * IDF[j] / sqrt(divisor);//TFxIDF
 					}
 
 				}else{
-					dataSetOut[i][j] = TF * IDF[j];//TFxIDF
+					dataSet[i][j] = TF * IDF[j];//TFxIDF
 				}
 			}
 		}

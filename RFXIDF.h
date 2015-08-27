@@ -113,13 +113,13 @@ void weightsRFxIDF(long l, long c, long norm){//Relevance Frequency x IDF
 						}
 
 						if((TF * RF[j] * IDF[j]) == 0){
-							dataSetOut[i][j] = TF * RF[j] * IDF[j];//TFxIDF
+							dataSet[i][j] = TF * RF[j] * IDF[j];//TFxIDF
 						}else{
-							dataSetOut[i][j] = TF * RF[j] * IDF[j] / sqrt(divisor);//TFxIDF
+							dataSet[i][j] = TF * RF[j] * IDF[j] / sqrt(divisor);//TFxIDF
 						}
 
 					}else{
-						dataSetOut[i][j] = TF * RF[j] * IDF[j];//TFxRF
+						dataSet[i][j] = TF * RF[j] * IDF[j];//TFxRF
 					}
 				}
 			}else{//Base Normal
@@ -134,13 +134,13 @@ void weightsRFxIDF(long l, long c, long norm){//Relevance Frequency x IDF
 					}
 
 					if((TF * RF[j] * IDF[j]) == 0){
-						dataSetOut[i][j] = TF * RF[j] * IDF[j];//TFxIDF
+						dataSet[i][j] = TF * RF[j] * IDF[j];//TFxIDF
 					}else{
-						dataSetOut[i][j] = TF * RF[j] * IDF[j] / sqrt(divisor);//TFxIDF
+						dataSet[i][j] = TF * RF[j] * IDF[j] / sqrt(divisor);//TFxIDF
 					}
 
 				}else{
-					dataSetOut[i][j] = TF * RF[j] * IDF[j];//TFxRF
+					dataSet[i][j] = TF * RF[j] * IDF[j];//TFxRF
 				}
 			}
 		}

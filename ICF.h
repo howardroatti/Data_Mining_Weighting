@@ -57,13 +57,13 @@ void weightsICF(long l, long c, long norm){
 						}
 
 						if((TF * ICF[j]) == 0){
-							dataSetOut[i][j] = TF * ICF[j];//TFxIDF
+							dataSet[i][j] = TF * ICF[j];//TFxIDF
 						}else{
-							dataSetOut[i][j] = TF * ICF[j] / sqrt(divisor);//TFxIDF
+							dataSet[i][j] = TF * ICF[j] / sqrt(divisor);//TFxIDF
 						}
 
 					}else{
-						dataSetOut[i][j] = TF * ICF[j];//TFxIDF
+						dataSet[i][j] = TF * ICF[j];//TFxIDF
 					}
 
 				}
@@ -79,13 +79,13 @@ void weightsICF(long l, long c, long norm){
 					}
 
 					if((TF * ICF[j]) == 0){
-						dataSetOut[i][j] = TF * ICF[j];//TFxIDF
+						dataSet[i][j] = TF * ICF[j];//TFxIDF
 					}else{
-						dataSetOut[i][j] = TF * ICF[j] / sqrt(divisor);//TFxIDF
+						dataSet[i][j] = TF * ICF[j] / sqrt(divisor);//TFxIDF
 					}
 
 				}else{
-					dataSetOut[i][j] = TF * ICF[j];//TFxIDF
+					dataSet[i][j] = TF * ICF[j];//TFxIDF
 				}
 			}
 		}

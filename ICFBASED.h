@@ -92,7 +92,7 @@ void weightsICFBASED(long l, long c, long norm){//ICFBASED
 				if(log2(2 + ( a / std::max(long(1), b) ) * ICF[j]) > ICFBASED[j]){
 					ICFBASED[j] = log2(2 + ( a / std::max(long(1), b) ) * ICF[j]);
 				}
-				//		printf("%d - %.6g\t%d\t%d\t%.6g\n", category, ICFBASED(j, category), a, b, ICF(j,0));
+				//		printf("%d - %.6g\t%d\t%d\t%.6g\n", category, IdataSetOutCFBASED(j, category), a, b, ICF(j,0));
 				//		category++;
 
 			}
@@ -115,13 +115,13 @@ void weightsICFBASED(long l, long c, long norm){//ICFBASED
 						}
 
 						if((TF * ICFBASED[j]) == 0){
-							dataSetOut[i][j] = TF * ICFBASED[j];//TFxIDF
+							dataSet[i][j] = TF * ICFBASED[j];//TFxIDF
 						}else{
-							dataSetOut[i][j] = TF * ICFBASED[j] / sqrt(divisor);//TFxIDF
+							dataSet[i][j] = TF * ICFBASED[j] / sqrt(divisor);//TFxIDF
 						}
 
 					}else{
-						dataSetOut[i][j] = TF * ICFBASED[j];//TFxRF
+						dataSet[i][j] = TF * ICFBASED[j];//TFxRF
 					}
 
 				}
@@ -137,13 +137,13 @@ void weightsICFBASED(long l, long c, long norm){//ICFBASED
 					}
 
 					if((TF * ICFBASED[j]) == 0){
-						dataSetOut[i][j] = TF * ICFBASED[j];//TFxIDF
+						dataSet[i][j] = TF * ICFBASED[j];//TFxIDF
 					}else{
-						dataSetOut[i][j] = TF * ICFBASED[j] / sqrt(divisor);//TFxIDF
+						dataSet[i][j] = TF * ICFBASED[j] / sqrt(divisor);//TFxIDF
 					}
 
 				}else{
-					dataSetOut[i][j] = TF * ICFBASED[j];//TFxRF
+					dataSet[i][j] = TF * ICFBASED[j];//TFxRF
 				}
 
 

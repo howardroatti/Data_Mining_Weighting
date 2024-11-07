@@ -1,6 +1,3 @@
-# Data_Mining_Weighting
-Certo, aqui está uma proposta de README.md melhorado para este projeto:
-
 # Sparse Matrix Weighting
 
 This project provides a tool for weighting sparse matrices, which is a common task in data mining and analysis.
